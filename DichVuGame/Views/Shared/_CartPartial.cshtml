@@ -1,0 +1,47 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Http
+@using DichVuGame.Extensions
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject IHttpContextAccessor HttpContextAccessor
+<ul class="navbar-nav float-lg-right" style="margin-right: 10px">
+   
+    <li class="nav-item">
+
+        <div class="nav-link dropdown">
+            @{
+                int count = 0;
+                var shoppingCart = HttpContextAccessor.HttpContext.Session.Get<List<DichVuGame.Models.ViewModels.CartViewModel>>("ShoppingCartSession");
+                if (shoppingCart != null)
+                {
+                    count = HttpContextAccessor.HttpContext.Session.Get<List<DichVuGame.Models.ViewModels.CartViewModel>>("ShoppingCartSession").Count;
+
+                    <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="btn btn-outline-light" style="color:black"><i class="fas fa-shopping-cart"></i> Giỏ hàng(@count)</a>
+                    <table class="dropdown-cartitem">
+                        <tbody>
+                            @foreach (var item in shoppingCart)
+                            {
+                                <tr style="width:100%">
+                                    <td>
+                                        <a class="dropdown-item" asp-area="Customer" asp-controller="Home" asp-action="Details" asp-route-id="@item.Game.ID">@item.Game.Gamename</a>
+                                    </td>
+                                    <td>
+                                        <p>Số lượng: @item.Amount</p>
+                                    </td>
+                                    <td>
+                                        <p>Giá: @item.Game.Price<span>đ</span></p>
+                                    </td>
+                                    <td>
+                                        <a asp-area="Customer" asp-controller="Cart" asp-action="RemoveFromCartInHome" asp-route-id="@item.Game.ID">x</a>
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+
+        </div>
+    </li>
+</ul>
