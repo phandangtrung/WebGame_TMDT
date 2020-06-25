@@ -10313,19 +10313,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Minh Khue PC\\.nuget\\packages\\": {}
+    "C:\\Users\\Tho Xao Dien\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
+      "projectUniqueName": "E:\\TMDT\\backup_project\\upgit\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
       "projectName": "DichVuGame",
-      "projectPath": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
-      "packagesPath": "C:\\Users\\Minh Khue PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\obj\\",
+      "projectPath": "E:\\TMDT\\backup_project\\upgit\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
+      "packagesPath": "C:\\Users\\Tho Xao Dien\\.nuget\\packages\\",
+      "outputPath": "E:\\TMDT\\backup_project\\upgit\\WebGame_TMDT\\DichVuGame\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Minh Khue PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Tho Xao Dien\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -10412,6 +10412,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[3.1.2, 3.1.2]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.AspNetCore.App": {
             "privateAssets": "none"
@@ -10420,7 +10426,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.301\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
       }
     }
   },
