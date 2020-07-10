@@ -12,6 +12,5 @@ namespace DichVuGame.Utility
         public const string CUSTOMER_ROLE = "Customer";
         public const string CUSTOMERCARE_ROLE = "CustomerCare";
         public const string MRHAI_ROLE = "MrHai";
-        public const string ApiUrl = "https://localhost:44387";
     }
 }

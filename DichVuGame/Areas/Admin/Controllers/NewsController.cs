@@ -11,7 +11,6 @@ using DichVuGame.Models;
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("tin-tuc-game")]
     public class NewsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,14 +21,12 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/News
-        [Route("quan-ly")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.News.ToListAsync());
         }
 
         // GET: Admin/News/Details/5
-        [Route("chi-tiet/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -46,7 +43,7 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(@new);
         }
-        [Route("them-moi")]
+
         // GET: Admin/News/Create
         public IActionResult Create()
         {
@@ -70,7 +67,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/News/Edit/5
-        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,7 +118,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/News/Delete/5
-        [Route("xoa/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

@@ -23,6 +23,5 @@ namespace DichVuGame.Models.ViewModels
         public List<GameReview> Reviews { get; set; }
         public bool WasBought { get; set; }
         public string ShareUrl { get; set; }
-        public PagingInfo PagingInfo { get; set; }
     }
 }

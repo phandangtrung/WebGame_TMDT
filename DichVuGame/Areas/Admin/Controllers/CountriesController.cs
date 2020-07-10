@@ -7,12 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DichVuGame.Data;
 using DichVuGame.Models;
-using System.Net.Http;
 
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("quoc-gia")]
     public class CountriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -21,13 +19,13 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             _context = context;
         }
-        [Route("quan-ly")]
+
         // GET: Admin/Countries
         public async Task<IActionResult> Index()
         {
             return View(await _context.Countries.ToListAsync());
         }
-        [Route("chi-tiet")]
+
         // GET: Admin/Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -45,7 +43,7 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(country);
         }
-        [Route("them-moi")]
+
         // GET: Admin/Countries/Create
         public IActionResult Create()
         {
@@ -61,7 +59,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                HttpClient httpClient = new HttpClient();
                 if(SameCountry(country.Countryname) == false)
                 {
                     _context.Add(country);
@@ -78,7 +75,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Countries/Edit/5
-        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -130,7 +126,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Countries/Delete/5
-        [Route("xoa/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

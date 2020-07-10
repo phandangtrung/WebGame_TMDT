@@ -5,11 +5,11 @@
     Layout = "~/Areas/Admin/Views/AdminHome/_CMSLayout.cshtml";
 }
 
-<br />
-<div class="p-4 border rounded" style="background-color:#435d7d">
-    <h2 class="text-white" style="font-family:Bahnschrift;color:azure">Tạo game mới </h2>
-</div>
-<br />
+<h1>Create</h1>
+
+<h4>Game</h4>
+<hr />
+
 <form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="p-4 border rounded">
         <div class="text-danger">@Html.ValidationMessage("SameGame")</div>
@@ -75,11 +75,13 @@
             </div>
         </div>
         <div class="form-group">
-            <input type="submit" class="btn btn-primary" value="Lưu" />
-            <a asp-action="Index" class="btn btn-success">Trở về</a>
+            <input type="submit" value="Create" class="btn btn-primary" />
         </div>
     </div>
 </form>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
 <script>
 
 </script>
