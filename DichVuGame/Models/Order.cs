@@ -14,13 +14,14 @@ namespace DichVuGame.Models
         public string ApplicationUserID { get; set; }
         [ForeignKey("ApplicationUserID")]
         public ApplicationUser ApplicationUser { get; set; }
+        [Display(Name ="Ngày mua")]
         public DateTime PurchasedDate { get; set; }
+        [Display(Name = "Thành tiền")]
+        public double Total { get; set; }
+        [Display(Name = "Mã giảm giá")]
         public int? DiscountID { get; set; }
         [ForeignKey("DiscountID")]
         public Discount Discount { get; set; }
-        [Display(Name = "Thành tiền")]
-        public double Total { get; set; }
-        
         public virtual ICollection<OrderDetail> Codes { get; set; }
     }
 }
