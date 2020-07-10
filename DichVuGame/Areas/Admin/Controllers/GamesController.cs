@@ -40,16 +40,8 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Games
-        public ActionResult Index(string q = null)
+        public ActionResult Index()
         {
-            if(q == "Selling")
-            {
-                GamesViewModel.Games = GamesViewModel.Games.Where(u => u.IsPublish == true).ToList();
-            }
-            if(q == "Waiting")
-            {
-                GamesViewModel.Games = GamesViewModel.Games.Where(u => u.IsPublish == false).ToList();
-            }
             return View(GamesViewModel);
         }
 
@@ -96,6 +88,7 @@ namespace DichVuGame.Areas.Admin.Controllers
                 if(GameExists(GamesViewModel.Game.Gamename) == false)
                 {
                     GamesViewModel.Game.AvailableCode = 0;
+                    GamesViewModel.Game.AvailableAccount = 0;
                     _context.Games.Add(GamesViewModel.Game);
                     await _context.SaveChangesAsync();
 
@@ -164,7 +157,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "Studioname", game.StudioID);
+            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "ID", game.StudioID);
             return View(game);
         }
 
@@ -217,7 +210,7 @@ namespace DichVuGame.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "Studioname", game.StudioID);
+            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "ID", game.StudioID);
             return View(game);
         }
 
@@ -289,25 +282,6 @@ namespace DichVuGame.Areas.Admin.Controllers
                 tag.Add(temp.Trim());
             }
             return tag;
-        }
-        public async Task<IActionResult> ManageGame()
-        {
-            var games = await _context.Games.Include(u => u.Studio).ToListAsync();
-            return View(games);
-        }
-        public async Task<IActionResult> Publish(int id)
-        {
-            var game = await _context.Games.Where(u => u.ID == id).FirstOrDefaultAsync();
-            game.IsPublish = true;
-            _context.SaveChanges();
-            return RedirectToAction("ManageGame");
-        }
-        public async Task<IActionResult> DePublish(int id)
-        {
-            var game = await _context.Games.Where(u => u.ID == id).FirstOrDefaultAsync();
-            game.IsPublish = false;
-            _context.SaveChanges();
-            return RedirectToAction("ManageGame");
         }
         private bool GameExists(string gamename)
         {

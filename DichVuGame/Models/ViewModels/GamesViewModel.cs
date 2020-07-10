@@ -20,8 +20,7 @@ namespace DichVuGame.Models.ViewModels
         public string Tags { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public List<Comment> Comments { get; set; }
-        public List<GameReview> Reviews { get; set; }
+        public List<Review> Reviews { get; set; }
         public bool WasBought { get; set; }
-        public string ShareUrl { get; set; }
     }
 }

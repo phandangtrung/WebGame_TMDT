@@ -39,7 +39,6 @@ namespace DichVuGame.Data
                         Address = "Quận 9",
                         Sex = "Nam",
                         EmailConfirmed = true,
-                        CreateDate = DateTime.Now
                     }, "Admin1@").GetAwaiter().GetResult();
                     ApplicationUser usertodo = _db.ApplicationUsers.Where(u => u.Email == "mrtruonghai@gmail.com").FirstOrDefault();
                     await _userManager.AddToRoleAsync(usertodo, Helper.ADMIN_ROLE);
@@ -60,7 +59,6 @@ namespace DichVuGame.Data
                 Address = "Quận 9",
                 Sex = "Nam",
                 EmailConfirmed = true,
-                CreateDate = DateTime.Now
             }, "Admin1@").GetAwaiter().GetResult();
             ApplicationUser user = _db.ApplicationUsers.Where(u => u.Email == "superadmin2@gmail.com").FirstOrDefault();
             _userManager.AddToRoleAsync(user, Helper.ADMIN_ROLE).GetAwaiter().GetResult();

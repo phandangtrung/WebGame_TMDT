@@ -11,5 +11,6 @@ namespace DichVuGame.Models.ViewModels
         public int Amount { get; set; }
         public Studio Studio { get; set; }
         public List<Game> Games { get; set; }
+        public GameAccount GameAccount { get; set; }
     }
 }

@@ -8,5 +8,6 @@ namespace DichVuGame.Models.ViewModels
     public class GameAccountViewModel
     {
         public Game Game { get; set; }
+        public GameAccount GameAccount { get; set; }
     }
 }

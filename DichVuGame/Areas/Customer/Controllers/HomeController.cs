@@ -15,7 +15,6 @@ using DichVuGame.Helpers;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using DichVuGame.Utility;
-using MimeKit.Encodings;
 
 namespace DichVuGame.Controllers
 {
@@ -37,20 +36,20 @@ namespace DichVuGame.Controllers
                 GameTags = new List<GameTag>(),
                 ApplicationUser = new ApplicationUser(),
                 Comments = new List<Comment>(),
-                Reviews = new List<GameReview>()
+                Reviews = new List<Review>(),
             };
         }
 
         public async Task<IActionResult> Index()
         {
             var user = await _db.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefaultAsync();
-            if (user != null)
+            if(user != null)
             {
-                if (User.IsInRole(Helper.ADMIN_ROLE) || User.IsInRole(Helper.CUSTOMERCARE_ROLE) || User.IsInRole(Helper.MANAGER_ROLE) || User.IsInRole(Helper.MRHAI_ROLE))
+                if(User.IsInRole(Helper.ADMIN_ROLE) || User.IsInRole(Helper.CUSTOMERCARE_ROLE) || User.IsInRole(Helper.MANAGER_ROLE) || User.IsInRole(Helper.MRHAI_ROLE))
                 {
                     return RedirectToAction("Index", "AdminHome", new { area = "Admin" });
                 }
-            }
+            }    
             List<CartViewModel> lstCart = HttpContext.Session.Get<List<CartViewModel>>("ShoppingCartSession");
             List<CartViewModel> lstCart2 = HttpContext.Session.Get<List<CartViewModel>>("ShoppingCartSession2");
             if (lstCart == null)
@@ -63,7 +62,7 @@ namespace DichVuGame.Controllers
             }
             HttpContext.Session.Set("ShoppingCartSession", lstCart);
             HttpContext.Session.Set("ShoppingCartSession2", lstCart2);
-            var games = await _db.Games.Where(u => u.IsPublish == true).Include(u => u.Studio).ToListAsync();
+            var games = await _db.Games.Include(u => u.Studio).ToListAsync();
             gamesVM.Games = games;
             return View(gamesVM);
         }
@@ -71,7 +70,7 @@ namespace DichVuGame.Controllers
         {
             if (q != null)
             {
-                var queryGames = await _db.Games.Where(u => u.Gamename.ToLower().Trim().Contains(q.ToLower().Trim()) || u.Studio.Studioname.ToLower().Trim().Contains(q.ToLower().Trim())).Include(u => u.Studio).ToListAsync();
+                var queryGames = await _db.Games.Where(u => u.Gamename.ToLower().Trim().Contains(q.ToLower().Trim())).ToListAsync();
                 gamesVM.Games = queryGames;
                 return View(nameof(Index), gamesVM);
 
@@ -82,7 +81,7 @@ namespace DichVuGame.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Details(int id, string requireLogin = null, string outOfRange = null)
+        public async Task<IActionResult> Details(int id, string requireLogin = null,string outOfRange = null)
         {
             List<CartViewModel> lstCart = HttpContext.Session.Get<List<CartViewModel>>("ShoppingCartSession");
             if (lstCart == null)
@@ -107,8 +106,9 @@ namespace DichVuGame.Controllers
             var reviewOfGame = await (from a in _db.Games
                                       join b in _db.GameReviews
                                       on a.ID equals b.GameID
+                                      join c in _db.Reviews on b.ReviewID equals c.ID
                                       where a.ID == id
-                                      select b).Include(u => u.ApplicationUser).ToListAsync();
+                                      select c).Include(u => u.ApplicationUser).ToListAsync();
             if (user != null)
             {
                 var bought = await (from a in _db.Orders
@@ -121,73 +121,92 @@ namespace DichVuGame.Controllers
                 {
                     gamesVM.WasBought = true;
                 }
-                if (reviewOfGame.Where(u => u.ApplicationUserID == user.Id).FirstOrDefault() != null)
-                {
-                    gamesVM.WasBought = false;
-                }
             }
             gamesVM.Game = game;
             gamesVM.ApplicationUser = user;
             gamesVM.Comments = commentOfGame.OrderByDescending(u => u.CommentDate).ToList();
-            gamesVM.Reviews = reviewOfGame.OrderByDescending(u => u.Star).ToList();
+            gamesVM.Reviews = reviewOfGame.OrderByDescending(u => u.Vote).ToList();
             if (requireLogin != null)
             {
                 ViewBag.RequireLogin = "Vui lòng đăng nhập để bình luận";
             }
-            if (outOfRange != null)
+            if(outOfRange != null)
             {
                 ViewBag.OutOfRange = "Vui lòng chọn lại số lượng sản phẩm";
             }
-            var url = GetRawUrl(HttpContext.Request);
-            gamesVM.ShareUrl = url;
             return View(gamesVM);
-        }
-        public static string GetRawUrl(HttpRequest request)
-        {
-            var httpContext = request.HttpContext;
-            return $"{httpContext.Request.Scheme}://{httpContext.Request.Host}{httpContext.Request.Path}{httpContext.Request.QueryString}";
         }
         [HttpPost, ActionName("Details")]
         [ValidateAntiForgeryToken]
-        public IActionResult DetailsPOST(int id, int time)
+        public IActionResult DetailsPOST(int id, string type,int time)
         {
             List<CartViewModel> lstCart = HttpContext.Session.Get<List<CartViewModel>>("ShoppingCartSession");
             if (lstCart == null)
             {
                 lstCart = new List<CartViewModel>();
             }
-
-            bool alreadyInCart = false;
-            foreach (var item in lstCart)
+            List<CartViewModel> lstCart2 = HttpContext.Session.Get<List<CartViewModel>>("ShoppingCartSession2");
+            if (lstCart2 == null)
             {
-                if (item.Game.ID == id)
+                lstCart2 = new List<CartViewModel>();
+            }
+            if (type == "Code")
+            {
+                bool alreadyInCart = false;
+                foreach (var item in lstCart)
                 {
-
-                    if ((item.Amount += gamesVM.Amount) > item.Game.AvailableCode)
+                    if (item.Game.ID == id)
                     {
-                        item.Amount -= gamesVM.Amount;
+                        var temp = item.Amount += gamesVM.Amount;
+                        if (temp <= item.Game.AvailableCode)
+                        {
+                            item.Amount += gamesVM.Amount;
+                        }
+                        alreadyInCart = true;
+                        break;
                     }
-                    alreadyInCart = true;
-                    break;
+                }
+                if (!alreadyInCart)
+                {
+                    var game = _db.Games.Where(u => u.ID == id).FirstOrDefault();
+                    if(gamesVM.Amount <= game.AvailableCode)
+                    {
+                        lstCart.Add(new CartViewModel()
+                        {
+                            Game = game,
+                            Amount = gamesVM.Amount
+                        });
+                    }
+                    else
+                    {
+                        return RedirectToAction("Details", "Home", new { id = id,outOfRange = "1" });
+                    }
                 }
             }
-            if (!alreadyInCart)
+            if (type == "Account")
             {
-                var game = _db.Games.Where(u => u.ID == id).FirstOrDefault();
-                if (gamesVM.Amount <= game.AvailableCode)
+                bool alreadyInCart = false;
+                foreach (var item in lstCart2)
                 {
-                    lstCart.Add(new CartViewModel()
+                    if (item.Game.ID == id)
+                    {
+                        item.Amount += time;
+                        alreadyInCart = true;
+                        break;
+                    }
+                }
+                if (!alreadyInCart)
+                {
+                    var game = _db.Games.Where(u => u.ID == id).FirstOrDefault();
+                    lstCart2.Add(new CartViewModel()
                     {
                         Game = game,
-                        Amount = gamesVM.Amount
+                        Amount = time
                     });
-                }
-                else
-                {
-                    return RedirectToAction("Details", "Home", new { id = id, outOfRange = "1" });
                 }
             }
             HttpContext.Session.Set("ShoppingCartSession", lstCart);
+            HttpContext.Session.Set("ShoppingCartSession2", lstCart2);
             return RedirectToAction("Details", "Home", new { id = id });
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -261,11 +280,6 @@ namespace DichVuGame.Controllers
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
-        public async Task<IActionResult> StudioDetails(int id)
-        {
-            var studio = await _db.Studios.Where(u => u.ID == id).FirstOrDefaultAsync();
-            return View(studio);
         }
     }
 }

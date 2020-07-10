@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Thanh\\Desktop\\Webgame\\DichVuGame\\DichVuGame.csproj": {}
+    "D:\\Must save\\WebGame_TMDT-20200701T023531Z-001\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Thanh\\Desktop\\Webgame\\DichVuGame\\DichVuGame.csproj": {
+    "D:\\Must save\\WebGame_TMDT-20200701T023531Z-001\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Thanh\\Desktop\\Webgame\\DichVuGame\\DichVuGame.csproj",
+        "projectUniqueName": "D:\\Must save\\WebGame_TMDT-20200701T023531Z-001\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
         "projectName": "DichVuGame",
-        "projectPath": "C:\\Users\\Thanh\\Desktop\\Webgame\\DichVuGame\\DichVuGame.csproj",
+        "projectPath": "D:\\Must save\\WebGame_TMDT-20200701T023531Z-001\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
         "packagesPath": "C:\\Users\\Thanh\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Thanh\\Desktop\\Webgame\\DichVuGame\\obj\\",
+        "outputPath": "D:\\Must save\\WebGame_TMDT-20200701T023531Z-001\\WebGame_TMDT\\DichVuGame\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
