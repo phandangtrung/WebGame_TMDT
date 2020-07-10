@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\phamq\\Desktop\\HK2.3\\tmdt\\Cay\\DichVuGame\\DichVuGame.csproj": {}
+    "C:\\Users\\phamq\\Desktop\\FTMDT\\DichVuGame\\DichVuGame.csproj": {}
   },
   "projects": {
-    "C:\\Users\\phamq\\Desktop\\HK2.3\\tmdt\\Cay\\DichVuGame\\DichVuGame.csproj": {
+    "C:\\Users\\phamq\\Desktop\\FTMDT\\DichVuGame\\DichVuGame.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\phamq\\Desktop\\HK2.3\\tmdt\\Cay\\DichVuGame\\DichVuGame.csproj",
+        "projectUniqueName": "C:\\Users\\phamq\\Desktop\\FTMDT\\DichVuGame\\DichVuGame.csproj",
         "projectName": "DichVuGame",
-        "projectPath": "C:\\Users\\phamq\\Desktop\\HK2.3\\tmdt\\Cay\\DichVuGame\\DichVuGame.csproj",
+        "projectPath": "C:\\Users\\phamq\\Desktop\\FTMDT\\DichVuGame\\DichVuGame.csproj",
         "packagesPath": "C:\\Users\\phamq\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\phamq\\Desktop\\HK2.3\\tmdt\\Cay\\DichVuGame\\obj\\",
+        "outputPath": "C:\\Users\\phamq\\Desktop\\FTMDT\\DichVuGame\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\phamq\\AppData\\Roaming\\NuGet\\NuGet.Config",

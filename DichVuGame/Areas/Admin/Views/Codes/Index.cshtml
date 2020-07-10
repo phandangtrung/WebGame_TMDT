@@ -407,7 +407,7 @@
                                 <td>
                                     <div class="btn-group">
                                         <a type="button" class="btn btn-success" style="color:azure; margin-right:4px" asp-action="Edit" asp-controller="Codes" asp-route-id="@item.ID"><i class="fas fa-edit"></i></a>
-                                        <a title="Delete" type="button" data-toggle="modal" class="btn btn-danger" style="color:azure"><i class="fas fa-trash-alt"></i></a>
+                                        <a href="#deleteEmployeeModal" title="Delete" type="button" data-toggle="modal" class="btn btn-danger" style="color:azure"><i class="fas fa-trash-alt"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -434,7 +434,7 @@
                 <div class="modal-content">
                     <form asp-action="Delete">
                         <div class="modal-header">
-                            <h4 class="modal-title">Xoá game</h4>
+                            <h4 class="modal-title">Xoá mã codes này</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                         </div>
                         <div class="modal-body">
