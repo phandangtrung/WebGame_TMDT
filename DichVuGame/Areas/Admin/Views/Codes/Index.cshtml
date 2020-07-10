@@ -359,6 +359,7 @@
         });
     </script>
 </head>
+@{int id = 0;
     <body>
         <div class="container-xl">
             <div class="table-responsive">
@@ -369,7 +370,7 @@
                                 <h2>Danh sách code game</h2>
                             </div>
                             <div class="col-sm-6">
-
+                                
                             </div>
                         </div>
                     </div>
@@ -391,25 +392,26 @@
                         <tbody>
                             @foreach (var item in Model)
                             {
-
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Game.ID)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Gamecode)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Available)
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <a type="button" class="btn btn-success" style="color:azure; margin-right:4px" asp-action="Edit" asp-controller="Codes" asp-route-id="@item.ID"><i class="fas fa-edit"></i></a>
-                                            <a id="@item.ID" title="Delete" href="#deleteEmployeeModal" data-toggle="modal" class="btn btn-danger" onclick="DeleteUser(this.id)" style="color:azure"><i class="fas fa-trash-alt"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                            }
+                                
+                            <tr>
+                                @{ id = item.ID;}
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Game.ID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Gamecode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Available)
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a type="button" class="btn btn-success" style="color:azure; margin-right:4px" asp-action="Edit" asp-controller="Codes" asp-route-id="@item.ID"><i class="fas fa-edit"></i></a>
+                                        <a title="Delete" type="button" data-toggle="modal" class="btn btn-danger" style="color:azure"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                     <div class="clearfix">
@@ -430,7 +432,7 @@
         <div id="deleteEmployeeModal" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <form asp-action="Delete" method="post">
+                    <form asp-action="Delete">
                         <div class="modal-header">
                             <h4 class="modal-title">Xoá game</h4>
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -441,17 +443,13 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                            <input type="hidden" name="codeid" id="codeid"/>
+                            <input type="hidden" asp-for="@id" />
                             <input type="submit" class="btn btn-danger" value="Delete">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <script>
-            function DeleteUser(id) {
-                document.getElementById("codeid").value = id;
-            }
-        </script>
+        
     </body>
-</html>
+    }

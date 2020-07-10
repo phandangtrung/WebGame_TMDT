@@ -349,33 +349,33 @@
                                     <td>@Html.DisplayFor(modelItem => modelItem.Studio.Studioname)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Price)</td>
                                     <td>
-                                        <div class=" = btn-group">
-
-                                            <a type="button" class="btn btn-primary" style=" color: azure; margin-right: 4px" asp-action="Create" asp-controller="Codes" asp-route-id="@item.ID"><i class="far fa-plus-square"></i></a>
-                                            <a type="button" class="btn btn-primary" style="color:azure ;margin-right: 4px" asp-action="Create" asp-controller="SystemRequirements" asp-route-id="@item.ID"><i class="fas fa-laptop"></i></a>
-                                            <a type="button" class="btn btn-success" style="color:azure;margin-right:4px" asp-action="Edit" asp-controller="Games" asp-route-id="@item.ID"><i class="fas fa-edit"></i></a>
-                                            <a type="button" class="btn btn-info" style="color:azure ;margin-right:4px " asp-action="Details" asp-controller="Games" asp-route-id="@item.ID"><i class="far fa-list-alt"></i></a>
-                                            <a href="#deleteEmployeeModal" title="Delete" onclick="DeleteUser(this.id)" data-toggle="modal" class="btn btn-danger" style="color:azure"><i class="fas fa-trash-alt"></i></a>
+                                        <div class=" = btn-group" >
+                                       
+                                        <a type="button" class="btn btn-primary" style=" color: azure; margin-right: 4px" asp-action="Create" asp-controller="Codes" asp-route-id="@item.ID"><i class="far fa-plus-square"></i></a>
+                                        <a type="button" class="btn btn-primary" style="color:azure ;margin-right: 4px" asp-action="Create" asp-controller="SystemRequirements" asp-route-id="@item.ID"><i class="fas fa-laptop"></i></a>
+                                        <a type="button" class="btn btn-success" style="color:azure;margin-right:4px" asp-action="Edit" asp-controller="Games" asp-route-id="@item.ID"><i class="fas fa-edit"></i></a>
+                                        <a type="button" class="btn btn-info" style="color:azure ;margin-right:4px " asp-action="Details" asp-controller="Games" asp-route-id="@item.ID"><i class="far fa-list-alt"></i></a>
+                                        <a href="#deleteEmployeeModal" title="Delete" type="button" data-toggle="modal" class="btn btn-danger" style="color:azure"><i class="fas fa-trash-alt"></i></a>
                                         </div>
-                                        @*<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                    <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a href="#">Previous</a></li>
-                            <li class="page-item active"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item "><a href="#" class="page-link">3</a></li>
-                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                        </ul>
-                    </div>
-                </div>
+                    @*<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>*@
+                    </td>
+                    </tr>
+                }
+                            </tbody>
+                            </table>
+                            <div class="clearfix">
+                                <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                                <ul class="pagination">
+                                    <li class="page-item disabled"><a href="#">Previous</a></li>
+                                    <li class="page-item active"><a href="#" class="page-link">1</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                    <li class="page-item "><a href="#" class="page-link">3</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                    <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                </ul>
+                            </div>
+                        </div>
             </div>
         </div>
         <!-- Edit Modal HTML -->
@@ -463,18 +463,13 @@
                         </div>
                         <div class="modal-footer">
                             <input type="button" class="btn btn-default" data-dismiss="modal" value="Trở về">
-                            <input type="hidden" name="gameid" id="gameid" />
+                            <input type="hidden" asp-for="@id" />
                             <input type="submit" class="btn btn-danger" value="Xoá">
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-        <script>
-            function DeleteUser(id) {
-                document.getElementById("gameid").value = id;
-            }
-        </script>
     </body>
 }
 </html>

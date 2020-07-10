@@ -12,6 +12,7 @@ using System.Net.Http;
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("quoc-gia")]
     public class CountriesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -20,11 +21,13 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             _context = context;
         }
+        [Route("quan-ly")]
         // GET: Admin/Countries
         public async Task<IActionResult> Index()
         {
             return View(await _context.Countries.ToListAsync());
         }
+        [Route("chi-tiet")]
         // GET: Admin/Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -42,6 +45,7 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(country);
         }
+        [Route("them-moi")]
         // GET: Admin/Countries/Create
         public IActionResult Create()
         {
@@ -74,6 +78,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Countries/Edit/5
+        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -125,6 +130,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Countries/Delete/5
+        [Route("xoa/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -145,9 +151,9 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Countries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int countryid)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var country = await _context.Countries.FindAsync(countryid);
+            var country = await _context.Countries.FindAsync(id);
             _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

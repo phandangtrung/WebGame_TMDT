@@ -17,18 +17,17 @@ using Newtonsoft.Json;
 using System.Net;
 using Microsoft.AspNetCore.Routing;
 using DichVuGame.Services;
-using System.Net.Http;
 
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("games")]
     public class GamesController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _hostingEnvironment;
         [BindProperty]
         public GamesViewModel GamesViewModel { get; set; }
-        public HttpApi api;
         public GamesController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
@@ -43,8 +42,8 @@ namespace DichVuGame.Areas.Admin.Controllers
                 Studio = new Studio(),
                 SystemRequirement = new SystemRequirement()
             };
-            api = new HttpApi("https://localhost:44387/api/games");
         }
+        [Route("quan-ly")]
         // GET: Admin/Games
         public ActionResult Index(string q = null)
         {
@@ -62,7 +61,8 @@ namespace DichVuGame.Areas.Admin.Controllers
             return View(GamesViewModel);
             
         }
-         // GET: Admin/Games/Details/5
+        [Route("chi-tiet/{id}")]
+        // GET: Admin/Games/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -85,6 +85,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             GamesViewModel.GameTags = gameTag;
             return View(GamesViewModel);
         }
+        [Route("them-moi")]
         // GET: Admin/Games/Create
         public IActionResult Create()
         {
@@ -161,6 +162,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Games/Edit/5
+        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -230,6 +232,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Games/Delete/5
+        [Route("xoa/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -252,16 +255,15 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int gameid)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            HttpClient client = api.init();
-            HttpResponseMessage response = await client.DeleteAsync(api.ApiUrl + $"/{gameid}");
-            var result = response.Content.ReadAsStringAsync().Result;
-            var game = JsonConvert.DeserializeObject<Game>(result);
+            var game = await _context.Games.FindAsync(id);
             if(game.GamePoster != null)
             {
                 System.IO.File.Delete(_hostingEnvironment.WebRootPath + @"" + game.GamePoster);
             }
+            _context.Games.Remove(game);
+            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

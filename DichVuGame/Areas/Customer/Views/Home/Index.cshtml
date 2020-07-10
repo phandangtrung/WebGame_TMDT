@@ -72,21 +72,6 @@
         <label style="font-family:Bahnschrift;font-size:40px;color:black">Sản phẩm</label>
     </div>
     <section class="w3l-services-2" id="mainproduct">
-        <div class="services-2-mian ">
-            <div class="container ">
-                <div class="grid">
-                    <form asp-action="Index" method="get">
-                        <select name="country" onchange="this.form.submit()">
-                            <option>Quốc gia</option>
-                            @foreach (var item in Model.Countries)
-                            {
-                                <option value="@item.ID">@item.Countryname</option>
-                            }
-                        </select>
-                    </form>
-                </div>
-            </div>
-        </div>
         <!-- /content-6-section -->
         <div class="services-2-mian ">
             <div class="container ">

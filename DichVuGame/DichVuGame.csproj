@@ -86,18 +86,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\about\assets\bootstrap\js\bootstrap.min.js" />
-    <None Include="wwwroot\about\assets\dropdown\js\script.min.js" />
-    <None Include="wwwroot\about\assets\formoid\formoid.min.js" />
-    <None Include="wwwroot\about\assets\parallax\jarallax.min.js" />
-    <None Include="wwwroot\about\assets\playervimeo\vimeo_player.js" />
-    <None Include="wwwroot\about\assets\popper\popper.min.js" />
-    <None Include="wwwroot\about\assets\smoothscroll\smooth-scroll.js" />
-    <None Include="wwwroot\about\assets\tether\tether.min.js" />
-    <None Include="wwwroot\about\assets\theme\js\script.js" />
-    <None Include="wwwroot\about\assets\touchswipe\jquery.touch-swipe.min.js" />
-    <None Include="wwwroot\about\assets\web\assets\jquery\jquery.min.js" />
-    <None Include="wwwroot\about\assets\web\assets\mobirise-icons\mobirise-icons.svg" />
     <None Include="wwwroot\homepage\startbootstrap-shop-homepage-gh-pages\.gitignore" />
     <None Include="wwwroot\homepage\startbootstrap-shop-homepage-gh-pages\.travis.yml" />
     <None Include="wwwroot\homepage\startbootstrap-shop-homepage-gh-pages\gulpfile.js" />

@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("studio-game")]
     public class StudiosController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -31,6 +32,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             _context = context;
             _hostEnvironment = hostingEnvironment;
         }
+        [Route("quan-ly")]
         // GET: Admin/Studios
         public async Task<IActionResult> Index()
         {
@@ -40,6 +42,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             List<Studio> studios = JsonConvert.DeserializeObject<List<Studio>>(result);
             return View(studios);
         }
+        [Route("chi-tiet/{id}")]
         // GET: Admin/Studios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -55,6 +58,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Studios/Create
+        [Route("them-moi")]
         public IActionResult Create()
         {
             ViewData["CountryID"] = new SelectList(_context.Countries, "ID", "Countryname");
@@ -66,6 +70,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("them-moi")]
         public async Task<IActionResult> Create([Bind("ID,Studioname,StudioLogo,Describe,CountryID")] Studio studio)
         {
             if (ModelState.IsValid)
@@ -109,6 +114,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Studios/Edit/5
+        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -130,6 +136,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Route("chinh-sua")]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Studioname,StudioLogo,Describe,CountryID")] Studio studio)
         {
             if (id != studio.ID)
@@ -179,6 +186,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Studios/Delete/5
+        [Route("xoa/{id}")]
         public async Task<IActionResult> Delete(int? id)
         {
 
@@ -201,6 +209,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Studios/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Route("xoa")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             HttpClient client = api.init();
