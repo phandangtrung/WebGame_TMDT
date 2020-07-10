@@ -44,11 +44,12 @@ namespace DichVuGame.Controllers
                 GameTags = new List<GameTag>(),
                 ApplicationUser = new ApplicationUser(),
                 Comments = new List<Comment>(),
-                Reviews = new List<GameReview>()
+                Reviews = new List<GameReview>(),
+                Countries = new List<Country>()
             };
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1,int country = 0)
         {
             StringBuilder url = new StringBuilder();
             url.Append("/Customer/Home?page=:");
@@ -68,6 +69,11 @@ namespace DichVuGame.Controllers
             HttpContext.Session.Set("ShoppingCartSession", lstCart);
             CallAPI callAPI = new CallAPI("https://localhost:44387/api/games");
             List<Game> games = JsonConvert.DeserializeObject<List<Game>>(callAPI.GetResponse());
+            if (country > 0)
+            {
+                callAPI = new CallAPI("https://localhost:44387/api/countries/games/"+$"{country}");
+                games = JsonConvert.DeserializeObject<List<Game>>(callAPI.GetResponse());
+            }
             gamesVM.Games = games.Where(u => u.IsPublish == true).Skip((page -1)*pageSize).Take(pageSize).ToList();
             gamesVM.PagingInfo = new PagingInfo()
             {
@@ -76,6 +82,10 @@ namespace DichVuGame.Controllers
                 urlParam = url.ToString(),
                 TotalItems = games.Count
             };
+            CallAPI api = new CallAPI("https://localhost:44387/api/countries");
+            List<Country> countries = JsonConvert.DeserializeObject<List<Country>>(api.GetResponse());
+            gamesVM.Countries = countries;
+            
             return View(gamesVM);
         }
         public async Task<IActionResult> Search(string q = null)
@@ -291,6 +301,14 @@ namespace DichVuGame.Controllers
         {
             var studio = await _db.Studios.Where(u => u.ID == id).FirstOrDefaultAsync();
             return View(studio);
+        }
+        public async Task<IActionResult> Contact()
+        {
+            return View();
+        }
+        public async Task<IActionResult> About()
+        {
+            return View();
         }
     }
 }

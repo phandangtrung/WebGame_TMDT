@@ -16,7 +16,6 @@ namespace DichVuGame.Areas.Admin.Controllers
 { 
     [Area("Admin")]
     [Authorize(Roles = Helper.ADMIN_ROLE)]
-    [Route("tai-khoan")]
     public class ApplicationUserController : Controller
     {
         private readonly ApplicationDbContext _db;
@@ -33,7 +32,6 @@ namespace DichVuGame.Areas.Admin.Controllers
                 ApplicationUser = new ApplicationUser()
             };
         }
-        [Route("quan-ly")]
         public IActionResult Index(int productPage = 1,string q = null,string error = null)
         {
             if(q == null) { 
@@ -64,7 +62,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         //Get Edit
-        [Route("chinh-sua/{id}")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null || id.Trim().Length == 0)
@@ -86,7 +83,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         //Post Edit
         [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        [Route("chinh-sua")]
         public async Task<IActionResult> EditPost(string userid,string username,string userfullname,string useraddress,string userphone)
         {
             if (ModelState.IsValid)
@@ -131,7 +127,6 @@ namespace DichVuGame.Areas.Admin.Controllers
             return _db.ApplicationUsers.Any(u => u.User == username);
         }
         //Get Delete
-        [Route("vo-hieu-hoa/{id}")]
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null || id.Trim().Length == 0)
@@ -152,7 +147,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         //Post Delete
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Route("vo-hieu-hoa/{userid}")]
         public IActionResult DeletePOST(string userid)
         {
             ApplicationUser userFromDb = _db.ApplicationUsers.Where(u => u.Id == userid).FirstOrDefault();

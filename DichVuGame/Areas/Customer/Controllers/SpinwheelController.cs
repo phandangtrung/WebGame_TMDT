@@ -34,20 +34,19 @@ namespace DichVuGame.Areas.Customer.Controllers
             return View(SpinwheelVM);
         }
         [HttpPost]
-        //[Authorize(Roles = Helper.CUSTOMER_ROLE)]
+        [Authorize(Roles = Helper.CUSTOMER_ROLE)]
         public async Task<IActionResult> Reward()
         {
-            //var user = await _db.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefaultAsync();
-            //if(user.Balance < 20000)
-            //{
-            //    ModelState.AddModelError("OutOfBalance", "Tài khoản của bạn không đủ vui lòng nạp thêm");
-            //    return View(nameof(Index));
-            //}    
+            var user = await _db.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefaultAsync();
+            if (user.Balance < 50000)
+            {
+                ModelState.AddModelError("OutOfBalance", "Tài khoản của bạn không đủ vui lòng nạp thêm");
+                return View(nameof(Index));
+            }
             List<String> Reward = new List<string>() { "Game", "Discount", "Coin" };
             var totalReward = Reward.Count();
             var rewardOffset = new Random().Next(0, totalReward);
             var randomReward = Reward.Skip(rewardOffset).FirstOrDefault();
-            //var user = await _db.ApplicationUsers.Where(u => u.Email == User.Identity.Name).FirstOrDefaultAsync();
             switch (randomReward)
             {
                 case "Game":  //Lấy random game 
@@ -64,20 +63,21 @@ namespace DichVuGame.Areas.Customer.Controllers
                     {
                         SpinwheelVM.Code = code;
                     }
-                    //Order order = new Order()
-                    //{
-                    //    ApplicationUserID = user.Id,
-                    //    PurchasedDate = DateTime.Now,
-                    //    Total = 0
-                    //};
-                    //_db.Add(order);
-                    //OrderDetail orderDetail = new OrderDetail()
-                    //{
-                    //    OrderID = order.ID,
-                    //    CodeID = code.ID,
-                    //};
-                    //_db.Add(orderDetail);
-                    //_db.SaveChanges();
+                    Order order = new Order()
+                    {
+                        ApplicationUserID = user.Id,
+                        PurchasedDate = DateTime.Now,
+                        Total = 0
+                    };
+                    _db.Add(order);
+                    OrderDetail orderDetail = new OrderDetail()
+                    {
+                        OrderID = order.ID,
+                        CodeID = code.ID,
+                    };
+                    code.Available = false;
+                    _db.Add(orderDetail);
+                    _db.SaveChanges();
                     break;
                 case "Discount": //Lấy random mã giảm giá
                     var totalDiscount = _db.Discount.Count();
@@ -85,7 +85,7 @@ namespace DichVuGame.Areas.Customer.Controllers
                     var discount = _db.Discount.Skip(offsetDiscount).FirstOrDefault();
                     if(discount == null)
                     {
-                        var randomCoin2 = new Random().Next(10000, 30000);
+                        var randomCoin2 = new Random().Next(40000, 60000);
                         SpinwheelVM.Coin = randomCoin2;
                     }
                     else
@@ -95,14 +95,15 @@ namespace DichVuGame.Areas.Customer.Controllers
                     
                     break;
                 case "Coin": //Lấy random số coin 
-                    var randomCoin = new Random().Next(10000, 30000);
+                    var randomCoin = new Random().Next(40000, 60000);
                     SpinwheelVM.Coin = randomCoin;
-                    //user.Balance += randomCoin;
-                    //_db.SaveChanges();
+                    user.Balance += randomCoin;
                     break;
                 default:
                     break;
             }
+            user.Balance -= 50000;
+            _db.SaveChanges();
             return View(nameof(Index), SpinwheelVM);
         }
 

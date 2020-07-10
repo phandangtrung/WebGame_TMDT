@@ -2816,3 +2816,5 @@ C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Cu
 C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Games\ManageGame.cshtml.g.cs
 C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Customer\Views\TopupHistories\Details.cshtml.g.cs
 C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Customer\Views\TopupHistories\Index.cshtml.g.cs
+C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Customer\Views\Home\Contact.cshtml.g.cs
+C:\Users\Thanh\Desktop\Webgame\DichVuGame\obj\Debug\netcoreapp3.1\Razor\Areas\Customer\Views\Home\About.cshtml.g.cs

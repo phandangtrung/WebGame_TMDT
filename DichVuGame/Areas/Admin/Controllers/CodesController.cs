@@ -13,7 +13,6 @@ using DichVuGame.Models.ViewModels;
 namespace DichVuGame.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Route("ma-game")]
     public class CodesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,7 +27,6 @@ namespace DichVuGame.Areas.Admin.Controllers
                 Code = new Code()
             };
         }
-        [Route("quan-ly")]
         // GET: Admin/Codes
         public async Task<IActionResult> Index()
         {
@@ -37,7 +35,6 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Codes/Details/5
-        [Route("chi-tiet/{id}")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -55,7 +52,6 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(code);
         }
-        [Route("them-moi/game/{id}")]
         // GET: Admin/Codes/Create
         public async Task<IActionResult> Create(int id)
         {
@@ -81,7 +77,7 @@ namespace DichVuGame.Areas.Admin.Controllers
                     game.AvailableCode += 1;
                     _context.Add(GamesVM.Code);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Create", new { id = GamesVM.Game.ID });
                 }
                 else
                 {
@@ -95,7 +91,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Codes/Edit/5
-        [Route("chinh-sua/{id}")]
+ 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -115,7 +111,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Codes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost,ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,GameID,Gamecode,Available,OrderID")] Code code)
         {
@@ -148,8 +144,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             return View(code);
         }
 
-        // GET: Admin/Codes/Delete/5
-        [Route("xoa/{id}")]
+        // GET: Admin/Codes/Delete/
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -171,12 +166,15 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Codes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int codeid)
         {
-            var code = await _context.Codes.FindAsync(id);
+            var code = await _context.Codes.FindAsync(codeid);
             var game = await _context.Games.FindAsync(code.GameID);
             _context.Codes.Remove(code);
-            game.AvailableCode -= 1;
+            if (code.Available == true)
+            {
+                game.AvailableCode -= 1;
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
