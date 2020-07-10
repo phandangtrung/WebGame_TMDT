@@ -17,6 +17,8 @@ namespace DichVuGame.Models.ViewModels
         public List<Studio> Studios { get; set; }
         public List<Country> Countries { get; set; }
         public SystemRequirement SystemRequirement { get; set; }
+        public GameDemo GameDemo { get; set; }
+        public List<GameDemo> GameDemos { get; set; }
         public string Tags { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public List<Comment> Comments { get; set; }

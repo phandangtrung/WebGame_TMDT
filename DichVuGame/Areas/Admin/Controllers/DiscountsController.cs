@@ -23,7 +23,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // GET: Admin/Discounts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Discount.OrderBy(u => u.Available).ToListAsync());
+            return View(await _context.Discount.ToListAsync());
         }
 
         // GET: Admin/Discounts/Details/5
@@ -55,13 +55,22 @@ namespace DichVuGame.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Code,DiscountValue,Available")] Discount discount)
+        public async Task<IActionResult> Create([Bind("ID,DiscountCode,DiscountValue,Amount")] Discount discount)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(discount);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if(DiscountExists(discount.DiscountCode) == false)
+                {
+                    _context.Add(discount);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    ModelState.AddModelError("SameDiscount", "Mã giảm giá đã tồn tại");
+                    return View(discount);
+                }
+                
             }
             return View(discount);
         }
@@ -79,11 +88,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            if(discount.Available == true)
-            {
-                return View(discount);
-            }
-            return View(nameof(Index));
+            return View(discount);
         }
 
         // POST: Admin/Discounts/Edit/5
@@ -91,7 +96,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Code,DiscountValue,Available")] Discount discount)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,DiscountCode,DiscountValue,Amount")] Discount discount)
         {
             if (id != discount.ID)
             {
@@ -153,6 +158,10 @@ namespace DichVuGame.Areas.Admin.Controllers
         private bool DiscountExists(int id)
         {
             return _context.Discount.Any(e => e.ID == id);
+        }
+        private bool DiscountExists(string discount)
+        {
+            return _context.Discount.Any(e => e.DiscountCode == discount);
         }
     }
 }

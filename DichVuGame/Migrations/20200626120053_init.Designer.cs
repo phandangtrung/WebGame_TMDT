@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DichVuGame.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200630153942_init")]
+    [Migration("20200626120053_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,14 +107,14 @@ namespace DichVuGame.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("Available")
-                        .HasColumnType("bit");
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Code")
+                    b.Property<string>("DiscountCode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("DiscountValue")
-                        .HasColumnType("int");
+                    b.Property<double>("DiscountValue")
+                        .HasColumnType("float");
 
                     b.HasKey("ID");
 
@@ -146,27 +146,16 @@ namespace DichVuGame.Migrations
                     b.Property<string>("Gamename")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsPublish")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("LauncherID")
-                        .HasColumnType("int");
-
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("Release")
                         .HasColumnType("datetime2");
 
-                    b.Property<double>("RentalPrice")
-                        .HasColumnType("float");
-
                     b.Property<int>("StudioID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("LauncherID");
 
                     b.HasIndex("StudioID");
 
@@ -188,6 +177,9 @@ namespace DichVuGame.Migrations
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
@@ -214,19 +206,27 @@ namespace DichVuGame.Migrations
                     b.ToTable("GameComments");
                 });
 
-            modelBuilder.Entity("DichVuGame.Models.GameLauncher", b =>
+            modelBuilder.Entity("DichVuGame.Models.GameDemo", b =>
                 {
-                    b.Property<int>("LauncherID")
-                        .HasColumnType("int");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Demo")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GameID")
                         .HasColumnType("int");
 
-                    b.HasKey("LauncherID", "GameID");
+                    b.Property<bool>("IsVideo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("ID");
 
                     b.HasIndex("GameID");
 
-                    b.ToTable("GameLaunchers");
+                    b.ToTable("Demos");
                 });
 
             modelBuilder.Entity("DichVuGame.Models.GameReview", b =>
@@ -257,42 +257,6 @@ namespace DichVuGame.Migrations
                     b.HasIndex("TagID");
 
                     b.ToTable("GameTags");
-                });
-
-            modelBuilder.Entity("DichVuGame.Models.Launcher", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Downloadlink")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Launchername")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Launchers");
-                });
-
-            modelBuilder.Entity("DichVuGame.Models.New", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Content")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("News");
                 });
 
             modelBuilder.Entity("DichVuGame.Models.Order", b =>
@@ -755,10 +719,6 @@ namespace DichVuGame.Migrations
 
             modelBuilder.Entity("DichVuGame.Models.Game", b =>
                 {
-                    b.HasOne("DichVuGame.Models.Launcher", null)
-                        .WithMany("Games")
-                        .HasForeignKey("LauncherID");
-
                     b.HasOne("DichVuGame.Models.Studio", "Studio")
                         .WithMany("Games")
                         .HasForeignKey("StudioID")
@@ -790,17 +750,11 @@ namespace DichVuGame.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("DichVuGame.Models.GameLauncher", b =>
+            modelBuilder.Entity("DichVuGame.Models.GameDemo", b =>
                 {
                     b.HasOne("DichVuGame.Models.Game", "Game")
-                        .WithMany()
+                        .WithMany("GameDemos")
                         .HasForeignKey("GameID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DichVuGame.Models.Launcher", "Launcher")
-                        .WithMany()
-                        .HasForeignKey("LauncherID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -842,7 +796,7 @@ namespace DichVuGame.Migrations
                         .HasForeignKey("ApplicationUserID");
 
                     b.HasOne("DichVuGame.Models.Discount", "Discount")
-                        .WithMany()
+                        .WithMany("Orders")
                         .HasForeignKey("DiscountID");
 
                     b.HasOne("DichVuGame.Models.Game", null)
@@ -887,7 +841,7 @@ namespace DichVuGame.Migrations
                         .HasForeignKey("ApplicationUserID");
 
                     b.HasOne("DichVuGame.Models.Discount", "Discount")
-                        .WithMany()
+                        .WithMany("RentalHistories")
                         .HasForeignKey("DiscountID");
                 });
 
