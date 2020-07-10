@@ -27,7 +27,6 @@ namespace DichVuGame.Areas.Admin.Controllers
                 Code = new Code()
             };
         }
-
         // GET: Admin/Codes
         public async Task<IActionResult> Index()
         {
@@ -53,7 +52,6 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(code);
         }
-
         // GET: Admin/Codes/Create
         public async Task<IActionResult> Create(int id)
         {
@@ -79,7 +77,7 @@ namespace DichVuGame.Areas.Admin.Controllers
                     game.AvailableCode += 1;
                     _context.Add(GamesVM.Code);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Create", new { id = GamesVM.Game.ID });
                 }
                 else
                 {
@@ -93,6 +91,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/Codes/Edit/5
+ 
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,7 +111,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Codes/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost,ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,GameID,Gamecode,Available,OrderID")] Code code)
         {
@@ -145,7 +144,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             return View(code);
         }
 
-        // GET: Admin/Codes/Delete/5
+        // GET: Admin/Codes/Delete/
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -167,12 +166,15 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Codes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int codeid)
         {
-            var code = await _context.Codes.FindAsync(id);
+            var code = await _context.Codes.FindAsync(codeid);
             var game = await _context.Games.FindAsync(code.GameID);
             _context.Codes.Remove(code);
-            game.AvailableCode -= 1;
+            if (code.Available == true)
+            {
+                game.AvailableCode -= 1;
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

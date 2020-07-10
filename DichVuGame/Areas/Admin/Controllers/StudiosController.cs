@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using DichVuGame.Utility;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using DichVuGame.Services;
+using System.Net.Http;
+using DichVuGame.Extensions;
+using Newtonsoft.Json;
 
 namespace DichVuGame.Areas.Admin.Controllers
 {
@@ -20,19 +24,22 @@ namespace DichVuGame.Areas.Admin.Controllers
     {
         private readonly ApplicationDbContext _context;
         public IWebHostEnvironment _hostEnvironment;
+        public HttpApi api;
         public StudiosController(ApplicationDbContext context, IWebHostEnvironment hostingEnvironment)
         {
+            api = new HttpApi("https://localhost:44387/api/studios");
             _context = context;
             _hostEnvironment = hostingEnvironment;
         }
-
         // GET: Admin/Studios
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Studios.Include(s => s.Country);
-            return View(await applicationDbContext.ToListAsync());
+            HttpClient httpClient = api.init();
+            HttpResponseMessage response = await httpClient.GetAsync(api.ApiUrl);
+            var result = response.Content.ReadAsStringAsync().Result;
+            List<Studio> studios = JsonConvert.DeserializeObject<List<Studio>>(result);
+            return View(studios);
         }
-
         // GET: Admin/Studios/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -40,15 +47,10 @@ namespace DichVuGame.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
-            var studio = await _context.Studios
-                .Include(s => s.Country)
-                .FirstOrDefaultAsync(m => m.ID == id);
-            if (studio == null)
-            {
-                return NotFound();
-            }
-
+            HttpClient client = api.init();
+            HttpResponseMessage response = await client.GetAsync(api.ApiUrl + $"/{id}");
+            var result = response.Content.ReadAsStringAsync().Result;
+            Studio studio = JsonConvert.DeserializeObject<Studio>(result);
             return View(studio);
         }
 
@@ -68,21 +70,21 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (StudioExists(studio.Studioname))
+                if (!StudioExists(studio.Studioname))
                 {
-                    _context.Add(studio);
-                    await _context.SaveChangesAsync();
+                    HttpClient client = api.init();
+
                     var webRootPath = _hostEnvironment.WebRootPath;
                     var files = HttpContext.Request.Form.Files;
                     if (files.Count > 0)
                     {
                         var path = Path.Combine(webRootPath, SD.StudioImageFolder);
                         var extension = Path.GetExtension(files[0].FileName);
-                        using (var fileStream = new FileStream(Path.Combine(path, studio.ID + extension), FileMode.Create))
+                        using (var fileStream = new FileStream(Path.Combine(path, files[0].FileName), FileMode.Create))
                         {
                             files[0].CopyTo(fileStream);
                         }
-                        studio.StudioLogo = @"\" + SD.StudioImageFolder + @"\" + studio.ID + extension;
+                        studio.StudioLogo = @"\" + SD.StudioImageFolder + @"\" + files[0].FileName;
                     }
                     else
                     {
@@ -90,8 +92,11 @@ namespace DichVuGame.Areas.Admin.Controllers
                         System.IO.File.Copy(path, webRootPath + @"\" + SD.StudioImageFolder + @"\" + studio.ID + ".jpeg");
                         studio.StudioLogo = @"\" + SD.StudioImageFolder + @"\" + studio.ID + ".jpeg";
                     }
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    var result = client.PostAsJsonAsync(api.ApiUrl, studio).GetAwaiter().GetResult();
+                    if(result.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction(nameof(Index));
+                    }    
                 }
                 else
                 {
@@ -176,6 +181,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         // GET: Admin/Studios/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+
             if (id == null)
             {
                 return NotFound();
@@ -197,11 +203,17 @@ namespace DichVuGame.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var studio = await _context.Studios.FindAsync(id);
+            HttpClient client = api.init();
+            HttpResponseMessage response = await client.GetAsync(api.ApiUrl + $"/{id}");
+            var result = response.Content.ReadAsStringAsync().Result;
+            var studio = JsonConvert.DeserializeObject<Studio>(result);
             System.IO.File.Delete(_hostEnvironment.WebRootPath + @"\" + studio.StudioLogo);
-            _context.Studios.Remove(studio);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            var deleteResult = client.DeleteAsync(api.ApiUrl + $"/{id}").GetAwaiter().GetResult();
+            if(deleteResult.IsSuccessStatusCode)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            return View(studio);
         }
 
         private bool StudioExists(int id)

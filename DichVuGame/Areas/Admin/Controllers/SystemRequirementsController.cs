@@ -19,14 +19,12 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             _context = context;
         }
-
         // GET: Admin/SystemRequirements
         public async Task<IActionResult> Index()
         {
             var applicationDbContext = _context.SystemRequirements.Include(s => s.Game);
             return View(await applicationDbContext.ToListAsync());
         }
-
         // GET: Admin/SystemRequirements/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -47,10 +45,15 @@ namespace DichVuGame.Areas.Admin.Controllers
         }
 
         // GET: Admin/SystemRequirements/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create(int id)
         {
             ViewData["SystemRequirementID"] = new SelectList(_context.Games, "ID", "Gamename");
-            return View();
+            var game = await _context.Games.Where(u => u.ID == id).FirstOrDefaultAsync();
+            SystemRequirement sys = new SystemRequirement()
+            {
+                SystemRequirementID = game.ID
+            };
+            return View(sys);
         }
 
         // POST: Admin/SystemRequirements/Create

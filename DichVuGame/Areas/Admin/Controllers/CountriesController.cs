@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DichVuGame.Data;
 using DichVuGame.Models;
+using System.Net.Http;
 
 namespace DichVuGame.Areas.Admin.Controllers
 {
@@ -19,13 +20,11 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             _context = context;
         }
-
         // GET: Admin/Countries
         public async Task<IActionResult> Index()
         {
             return View(await _context.Countries.ToListAsync());
         }
-
         // GET: Admin/Countries/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -43,7 +42,6 @@ namespace DichVuGame.Areas.Admin.Controllers
 
             return View(country);
         }
-
         // GET: Admin/Countries/Create
         public IActionResult Create()
         {
@@ -59,6 +57,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                HttpClient httpClient = new HttpClient();
                 if(SameCountry(country.Countryname) == false)
                 {
                     _context.Add(country);
@@ -146,9 +145,9 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Countries/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int countryid)
         {
-            var country = await _context.Countries.FindAsync(id);
+            var country = await _context.Countries.FindAsync(countryid);
             _context.Countries.Remove(country);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

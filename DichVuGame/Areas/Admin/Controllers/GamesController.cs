@@ -13,6 +13,11 @@ using System.Net.WebSockets;
 using Microsoft.CodeAnalysis.CSharp;
 using System.IO;
 using DichVuGame.Utility;
+using Newtonsoft.Json;
+using System.Net;
+using Microsoft.AspNetCore.Routing;
+using DichVuGame.Services;
+using System.Net.Http;
 
 namespace DichVuGame.Areas.Admin.Controllers
 {
@@ -23,6 +28,7 @@ namespace DichVuGame.Areas.Admin.Controllers
         private readonly IWebHostEnvironment _hostingEnvironment;
         [BindProperty]
         public GamesViewModel GamesViewModel { get; set; }
+        public HttpApi api;
         public GamesController(ApplicationDbContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
@@ -37,15 +43,26 @@ namespace DichVuGame.Areas.Admin.Controllers
                 Studio = new Studio(),
                 SystemRequirement = new SystemRequirement()
             };
+            api = new HttpApi("https://localhost:44387/api/games");
         }
-
         // GET: Admin/Games
-        public ActionResult Index()
+        public ActionResult Index(string q = null)
         {
+            CallAPI callAPI = new CallAPI("https://localhost:44387/api/games"); 
+            List<Game> games = JsonConvert.DeserializeObject<List<Game>>(callAPI.GetResponse());
+            GamesViewModel.Games = games;
+            if (q == "Selling")
+            {
+                GamesViewModel.Games = games.Where(u => u.IsPublish==true).ToList();
+            }
+            if (q == "Waiting")
+            {
+                GamesViewModel.Games = games.Where(u => u.IsPublish == false).ToList();
+            }
             return View(GamesViewModel);
+            
         }
-
-        // GET: Admin/Games/Details/5
+         // GET: Admin/Games/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -68,7 +85,6 @@ namespace DichVuGame.Areas.Admin.Controllers
             GamesViewModel.GameTags = gameTag;
             return View(GamesViewModel);
         }
-
         // GET: Admin/Games/Create
         public IActionResult Create()
         {
@@ -88,7 +104,6 @@ namespace DichVuGame.Areas.Admin.Controllers
                 if(GameExists(GamesViewModel.Game.Gamename) == false)
                 {
                     GamesViewModel.Game.AvailableCode = 0;
-                    GamesViewModel.Game.AvailableAccount = 0;
                     _context.Games.Add(GamesViewModel.Game);
                     await _context.SaveChangesAsync();
 
@@ -157,7 +172,7 @@ namespace DichVuGame.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "ID", game.StudioID);
+            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "Studioname", game.StudioID);
             return View(game);
         }
 
@@ -210,7 +225,7 @@ namespace DichVuGame.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "ID", game.StudioID);
+            ViewData["StudioID"] = new SelectList(_context.Studios, "ID", "Studioname", game.StudioID);
             return View(game);
         }
 
@@ -237,15 +252,16 @@ namespace DichVuGame.Areas.Admin.Controllers
         // POST: Admin/Games/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int gameid)
         {
-            var game = await _context.Games.FindAsync(id);
+            HttpClient client = api.init();
+            HttpResponseMessage response = await client.DeleteAsync(api.ApiUrl + $"/{gameid}");
+            var result = response.Content.ReadAsStringAsync().Result;
+            var game = JsonConvert.DeserializeObject<Game>(result);
             if(game.GamePoster != null)
             {
                 System.IO.File.Delete(_hostingEnvironment.WebRootPath + @"" + game.GamePoster);
             }
-            _context.Games.Remove(game);
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
@@ -282,6 +298,25 @@ namespace DichVuGame.Areas.Admin.Controllers
                 tag.Add(temp.Trim());
             }
             return tag;
+        }
+        public async Task<IActionResult> ManageGame()
+        {
+            var games = await _context.Games.Include(u => u.Studio).ToListAsync();
+            return View(games);
+        }
+        public async Task<IActionResult> Publish(int id)
+        {
+            var game = await _context.Games.Where(u => u.ID == id).FirstOrDefaultAsync();
+            game.IsPublish = true;
+            _context.SaveChanges();
+            return RedirectToAction("ManageGame");
+        }
+        public async Task<IActionResult> DePublish(int id)
+        {
+            var game = await _context.Games.Where(u => u.ID == id).FirstOrDefaultAsync();
+            game.IsPublish = false;
+            _context.SaveChanges();
+            return RedirectToAction("ManageGame");
         }
         private bool GameExists(string gamename)
         {

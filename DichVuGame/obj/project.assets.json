@@ -10313,19 +10313,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Minh Khue PC\\.nuget\\packages\\": {}
+    "C:\\Users\\Thanh\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
+      "projectUniqueName": "C:\\Users\\Thanh\\Documents\\Webgame\\DichVuGame\\DichVuGame.csproj",
       "projectName": "DichVuGame",
-      "projectPath": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\DichVuGame.csproj",
-      "packagesPath": "C:\\Users\\Minh Khue PC\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Minh Khue PC\\Desktop\\WebGame_TMDT\\DichVuGame\\obj\\",
+      "projectPath": "C:\\Users\\Thanh\\Documents\\Webgame\\DichVuGame\\DichVuGame.csproj",
+      "packagesPath": "C:\\Users\\Thanh\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Thanh\\Documents\\Webgame\\DichVuGame\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Minh Khue PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Thanh\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
