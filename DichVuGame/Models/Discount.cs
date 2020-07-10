@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,11 +8,11 @@ namespace DichVuGame.Models
 {
     public class Discount
     {
-        public int ID { get; set; } 
-        public string DiscountCode { get; set; }
-        public double DiscountValue { get; set; }
-        public int Amount { get; set; }
-        public ICollection<Order> Orders { get; set; }
-        public ICollection<RentalHistory> RentalHistories { get; set; }
+        public int ID { get; set; }
+        [Display(Name = "Mã giảm giá")]
+        public string Code { get; set; }
+        [Display(Name = "Giá trị giảm")]
+        public int DiscountValue { get; set; }
+        public bool Available { get; set; }
     }
 }
